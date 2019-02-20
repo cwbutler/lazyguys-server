@@ -5,8 +5,5 @@ setup:
 build:
   docker:
     web: Dockerfile
-release:
-  command:
-    - ./entrypoint-tasks.sh
 run:
   web: python3 manage.py runserver 0.0.0.0:${PORT}
