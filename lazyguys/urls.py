@@ -16,9 +16,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
+from rest_framework import routers
+from api import views
+from rest_framework.documentation import include_docs_urls
+
+router = routers.DefaultRouter()
+router.register(r'user', views.UserViewSet)
+router.register(r'business', views.BusinessViewSet)
+router.register(r'category', views.CategoryViewSet)
+router.register(r'menu', views.MenuViewSet)
+router.register(r'menuItem', views.MenuItemViewSet)
+router.register(r'schedule', views.ScheduleViewSet)
+router.register(r'scheduleException', views.ScheduleExceptionViewSet)
 
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
     path('admin/', admin.site.urls),
     url(r'^', include('rest_framework.urls')), # REST api
+    url(r'^docs/', include_docs_urls(title='LazyGuys API')),
+    path('', include(router.urls)),
 ]
