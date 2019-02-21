@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-import recurrence.fields
+from recurrence.fields import RecurrenceField
 
 # Create your models here.
 
@@ -88,7 +88,7 @@ class Schedule(BaseModel):
   start_time = models.TimeField(blank=True, null=True)
   end_time = models.TimeField(blank=True, null=True)
   is_recurring = models.BooleanField(default=False, blank=True)
-  recurrence_pattern = recurrence.fields.RecurrenceField(blank=True, null=True)
+  recurrence_pattern = RecurrenceField(blank=True, null=True)
   business = models.ForeignKey(Business, on_delete=models.DO_NOTHING, related_name='available', blank=True, null=True)
   menu = models.ForeignKey(Menu, on_delete=models.DO_NOTHING, related_name='available', blank=True)
 
