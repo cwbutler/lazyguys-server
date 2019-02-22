@@ -11,10 +11,10 @@ def create_superuser(apps, schema_editor):
     superuser.is_active = True
     superuser.is_superuser = True
     superuser.is_staff = True
-    superuser.username = os.environ.get('ADMIN_USERNAME')
-    superuser.email = os.environ.get('ADMIN_EMAIL')
+    superuser.username = os.environ.get('DJANGO_ADMIN_USERNAME')
+    superuser.email = os.environ.get('DJANGO_ADMIN_EMAIL')
     superuser.last_login = timezone.now()
-    superuser.set_password(os.environ.get('ADMIN_PASSWORD'))
+    superuser.set_password(os.environ.get('DJANGO_ADMIN_PASSWORD'))
     superuser.save()
 
 
