@@ -4,4 +4,5 @@ setup:
       as: DATABASE
 build:
   docker:
-    web: config/web/Dockerfile
+    web: Dockerfile
+    nginx: config/nginx/Dockerfile

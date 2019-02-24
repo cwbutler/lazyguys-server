@@ -11,7 +11,7 @@ services:
     container_name: lazyguys_web
     build:
       context: .
-      dockerfile: config/web/Dockerfile
+      dockerfile: Dockerfile
     entrypoint: /entrypoint.sh
     env_file: .env
     volumes:
@@ -24,9 +24,7 @@ services:
 
   nginx:
     container_name: lazyguys_nginx
-    build:
-      context: config/nginx
-      dockerfile: Dockerfile
+    build: config/nginx
     env_file: .env
     ports:
       - "${PORT}:${PORT}"
