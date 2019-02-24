@@ -1,21 +1,6 @@
-# Pull base image from Python 3
-FROM python:3
-ENV PYTHONUNBUFFERED 1
+FROM nginx
 
-# Set working directory
-RUN mkdir /code
-WORKDIR /code
+COPY default.conf.template /etc/nginx/conf.d/app.conf.template
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Install dependencies
-COPY requirements.txt /code/
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
-# Set entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
-CMD [ "start" ]
-
-# Copy project to working directory
-COPY . /code/
+CMD /bin/bash -c "envsubst '\$PORT' < /etc/nginx/conf.d/app.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'" 
