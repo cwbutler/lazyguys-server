@@ -18,4 +18,4 @@ ENTRYPOINT ["/entrypoint.sh"]
 CMD [ "start" ]
 
 # Copy project to working directory
-COPY /app/ /code/
+COPY . /code/
