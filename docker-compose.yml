@@ -7,7 +7,9 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: ./config/web/Dockerfile
     entrypoint: /entrypoint.sh
     env_file: .env
     volumes:
