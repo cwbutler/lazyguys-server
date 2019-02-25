@@ -1,6 +1,5 @@
 FROM nginx
 
-COPY default.conf.template /etc/nginx/conf.d/app.conf.template
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /nginx.conf.template
 
-CMD /bin/bash -c "envsubst '\$PORT' < /etc/nginx/conf.d/app.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'" 
+CMD /bin/bash -c "envsubst '\$APP_PORT' < /nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'" 
