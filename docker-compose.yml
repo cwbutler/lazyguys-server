@@ -18,7 +18,7 @@ services:
       - .:/code
       - static-content:/code/app/staticfiles
     expose:
-      - ${APP_PORT}
+      - ${PORT}
     depends_on:
       - db
 
@@ -27,7 +27,7 @@ services:
     build: config/nginx
     env_file: .env
     ports:
-      - "${APP_PORT}:${APP_PORT}"
+      - "${PORT}:${PORT}"
     volumes:
       - static-content:/static
     depends_on:
