@@ -2,7 +2,7 @@
 
 python3 app/manage.py migrate --no-input
 
-if [ "DJANGO_DEBUG" == "False" ]
+if [ "$DJANGO_DEBUG" == "False" ]
 then
   python3 app/manage.py collectstatic --no-input
   gunicorn lazyguys.wsgi --bind 0.0.0.0:${PORT} --preload --max-requests 1200 --chdir ./app -w 2
