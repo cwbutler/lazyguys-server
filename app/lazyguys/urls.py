@@ -19,6 +19,7 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from api import views
 from rest_framework.documentation import include_docs_urls
+from django.views.i18n import JavaScriptCatalog
 
 router = routers.DefaultRouter()
 router.register(r'user', views.UserViewSet)
@@ -35,4 +36,12 @@ urlpatterns = [
     url(r'^', include('rest_framework.urls')), # REST api
     url(r'^docs/', include_docs_urls(title='LazyGuys API')),
     path('', include(router.urls)),
+]
+
+js_info_dict = {
+    'packages': ('recurrence', ),
+}
+
+urlpatterns += [
+    url(r'^jsi18n/$', JavaScriptCatalog.as_view(), js_info_dict),
 ]

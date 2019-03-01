@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.timezone import now
 from recurrence.fields import RecurrenceField
 
 # Create your models here.
@@ -45,16 +46,26 @@ class Business(BaseModel):
     verbose_name_plural = 'businesses'
 
 
+class Category(BaseModel):
+  description = models.TextField(blank=True)
+  order = models.IntegerField(default=0, blank=True)
+  business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='categories', blank=True, null=True)
+
+  class Meta(BaseModel.Meta):
+    verbose_name_plural = 'categories'
+
+
 class Menu(BaseModel):
   description = models.TextField(blank=True)
   order = models.IntegerField(default=0, blank=True)
-  business = models.ForeignKey(Business, on_delete=models.DO_NOTHING, related_name='menus')
+  business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='menus')
+  categories = models.ManyToManyField(Category, related_name='menus', blank=True)
 
 
 class MenuItem(BaseModel):
   description = models.TextField(blank=True)
   order = models.IntegerField(default=0, blank=True)
-  menu = models.ForeignKey(Menu, on_delete=models.DO_NOTHING, related_name='items')
+  menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name='items')
   color = models.CharField(max_length=200, blank=True)
   width = models.CharField(max_length=200, blank=True)
   height = models.CharField(max_length=200, blank=True)
@@ -63,7 +74,7 @@ class MenuItem(BaseModel):
   model = models.CharField(max_length=200, blank=True)
   price = models.CharField(max_length=200, blank=True)
   active = models.BooleanField(default=True, blank=True)
-  categories = models.ManyToManyField('Category', related_name='items')
+  categories = models.ManyToManyField(Category, related_name='items', blank=True)
 
 
 class MenuItemModification(BaseModel):
@@ -72,25 +83,17 @@ class MenuItemModification(BaseModel):
   item = models.ForeignKey(MenuItem, on_delete=models.DO_NOTHING, related_name='modifications')
 
 
-class Category(BaseModel):
-  description = models.TextField(blank=True)
-  order = models.IntegerField(default=0, blank=True)
-
-  class Meta(BaseModel.Meta):
-    verbose_name_plural = 'categories'
-
-
 class Schedule(BaseModel):
   name = models.CharField(max_length=200, blank=True)
-  start_date = models.DateTimeField()
-  end_date = models.DateTimeField(blank=True)
+  start_date = models.DateField(default=now)
+  end_date = models.DateField(blank=True, null=True)
   all_day = models.BooleanField(default=False, blank=True)
   start_time = models.TimeField(blank=True, null=True)
   end_time = models.TimeField(blank=True, null=True)
   is_recurring = models.BooleanField(default=False, blank=True)
   recurrence_pattern = RecurrenceField(blank=True, null=True)
   business = models.ForeignKey(Business, on_delete=models.DO_NOTHING, related_name='available', blank=True, null=True)
-  menu = models.ForeignKey(Menu, on_delete=models.DO_NOTHING, related_name='available', blank=True)
+  menu = models.ForeignKey(Menu, on_delete=models.DO_NOTHING, related_name='available', blank=True, null=True)
 
   class Meta:
     ordering = []
