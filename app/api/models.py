@@ -50,6 +50,7 @@ class Category(BaseModel):
   description = models.TextField(blank=True)
   order = models.IntegerField(default=0, blank=True)
   business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='categories', blank=True, null=True)
+  active = models.BooleanField(default=True)
 
   class Meta(BaseModel.Meta):
     verbose_name_plural = 'categories'

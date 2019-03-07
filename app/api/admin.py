@@ -12,16 +12,19 @@ AdminSite.site_header = ugettext_lazy('Lazyguys Admin')
 AdminSite.site_title = ugettext_lazy('Lazyguys Admin')
 
 class BaseModelAdmin(admin.ModelAdmin):
+  def get_form(self, request, obj=None, **kwargs):
+    # save obj reference for future processing
+    request._obj_ = obj
+    return super(BaseModelAdmin, self).get_form(request, obj, **kwargs)
+
   def save_model(self, request, obj, form, change):
     if obj.id:
       obj.modified_by = request.user
     else:
       obj.created_by = request.user
     
-    super().save_model(request, obj, form, change)
+    super(BaseModelAdmin, self).save_model(request, obj, form, change)
 
-
-class BaseModelAdminInline(BaseModelAdmin):
   def save_formset(self, request, form, formset, change):
     instances = formset.save(commit=False)
 
@@ -37,18 +40,13 @@ class BaseModelAdminInline(BaseModelAdmin):
 
     formset.save_m2m()
 
-
 # Register your models here.
 
-class BaseScheduleExceptionInline(CompactInline):
-    model = models.ScheduleException
-    extra = 0
-
 class BaseScheduleInline(CompactInline):
-    model = models.Schedule
-    fields = ('name', 'start_date', 'end_date', 'start_time', 'end_time', 'recurrence_pattern')
-    extra = 0
-    show_change_link = True
+  model = models.Schedule
+  fields = ('name', 'start_date', 'start_time', 'end_time', 'recurrence_pattern')
+  extra = 0
+  show_change_link = True
 
 
 
@@ -56,6 +54,7 @@ class CategoryInline(CompactInline):
   model = models.Category
   extra = 0
   show_change_link = True
+
 
 class MenuInline(CompactInline):
   model = models.Menu
@@ -65,7 +64,7 @@ class MenuInline(CompactInline):
   def formfield_for_manytomany(self, db_field, request=None, **kwargs):
     field = super(MenuInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
-    # limit categories to the ones
+    # limit categories to the ones created by a business or globally
     if db_field.name == 'categories':
         if request._obj_ is not None:
             field.queryset = field.queryset.filter(Q(business__exact=request._obj_) | Q(business__exact=None))
@@ -74,34 +73,37 @@ class MenuInline(CompactInline):
 
     return field
 
+
 class BusinessScheduleInline(BaseScheduleInline):
   exclude = ['menu']
 
-class BusinessScheduleExceptionsInline(BaseScheduleExceptionInline):
-  exclude = ['menu']
-
-class BusinessAdmin(BaseModelAdminInline):
+class BusinessAdmin(BaseModelAdmin):
   inlines = [CategoryInline, MenuInline, BusinessScheduleInline]
-
-  def get_form(self, request, obj=None, **kwargs):
-    # just save obj reference for future processing in Inline
-    request._obj_ = obj
-    return super(BusinessAdmin, self).get_form(request, obj, **kwargs)
 
 admin.site.register(models.Business, BusinessAdmin)
 
 
 class MenuItemInline(CompactInline):
-    model = models.MenuItem
-    extra = 0
+  model = models.MenuItem
+  extra = 0
+
+  def formfield_for_manytomany(self, db_field, request=None, **kwargs):
+    field = super(MenuItemInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
+    # limit categories to the ones created by a business or globally
+    if db_field.name == 'categories':
+        if request._obj_ is not None:
+            field.queryset = field.queryset.filter(Q(business__exact=request._obj_) | Q(business__exact=None))
+        else:
+            field.queryset = field.queryset.none()
+
+    return field
+  
 class MenuScheduleInline(BaseScheduleInline):
   exclude = ['business']
 
-class MenuScheduleExceptionsInline(BaseScheduleExceptionInline):
-  exclude = ['business']
-
-class MenuAdmin(BaseModelAdminInline):
-  inlines = [MenuItemInline, MenuScheduleInline, MenuScheduleExceptionsInline]
+class MenuAdmin(BaseModelAdmin):
+  inlines = [MenuItemInline, MenuScheduleInline]
 
 admin.site.register(models.Menu, MenuAdmin)
 
@@ -111,6 +113,6 @@ admin.site.register(models.MenuItem, BaseModelAdmin)
 
 
 class ScheduleAdmin(BaseModelAdmin):
-  fields = ('name', 'start_date', 'end_date', 'start_time', 'end_time', 'recurrence_pattern', 'business', 'menu')
+  fields = ('name', 'start_date', 'start_time', 'end_time', 'recurrence_pattern', 'business', 'menu')
 
 admin.site.register(models.Schedule, ScheduleAdmin)
