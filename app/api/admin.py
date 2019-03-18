@@ -6,6 +6,11 @@ from django.urls import reverse
 from django.db.models import Q
 from api import models
 from jet.admin import CompactInline
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from .models import User
+
+admin.site.register(User, UserAdmin)
 
 AdminSite.index_title = ugettext_lazy('Lazyguys Admin')
 AdminSite.site_header = ugettext_lazy('Lazyguys Admin')
@@ -67,9 +72,10 @@ class MenuInline(CompactInline):
     # limit categories to the ones created by a business or globally
     if db_field.name == 'categories':
         if request._obj_ is not None:
-            field.queryset = field.queryset.filter(Q(business__exact=request._obj_) | Q(business__exact=None))
+          business = request._obj if isinstance(request._obj_, models.Business) else request._obj_.business
+          field.queryset = field.queryset.filter(Q(business__exact=business) | Q(business__exact=None))
         else:
-            field.queryset = field.queryset.none()
+          field.queryset = field.queryset.none()
 
     return field
 

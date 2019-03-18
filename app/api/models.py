@@ -1,16 +1,21 @@
 from django.db import models
 from django.conf import settings
 from django.utils.timezone import now
+from django.contrib.auth.models import AbstractUser
 from recurrence.fields import RecurrenceField
 
 # Create your models here.
+
+class User(AbstractUser):
+  pass
+
 
 class BaseModel(models.Model):
   name = models.CharField(max_length=200)
   created_at = models.DateTimeField(auto_now_add=True)
   modified_at = models.DateTimeField(auto_now=True)
   modified_by = models.ForeignKey(
-    settings.AUTH_USER_MODEL,
+    User,
     on_delete=models.DO_NOTHING,
     editable=False,
     related_name='%(app_label)s_%(class)s_modified',
@@ -19,7 +24,7 @@ class BaseModel(models.Model):
     null=True
   )
   created_by = models.ForeignKey(
-    settings.AUTH_USER_MODEL,
+    User,
     on_delete=models.DO_NOTHING,
     editable=False,
     related_name='%(app_label)s_%(class)s_created',
@@ -98,15 +103,4 @@ class Schedule(BaseModel):
 
   class Meta:
     ordering = []
-
-
-class ScheduleException(BaseModel):
-  name = None
-  event = models.ForeignKey(Schedule, on_delete=models.DO_NOTHING, related_name='exceptions')
-  date = models.DateTimeField()
-  business = models.ForeignKey(Business, on_delete=models.DO_NOTHING, related_name='unavailable', blank=True, null=True)
-  menu = models.ForeignKey(Menu, on_delete=models.DO_NOTHING, related_name='unavailable', blank=True, null=True)
-
-  class Meta:
-    ordering = []
-  
+ 

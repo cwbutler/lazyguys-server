@@ -37,8 +37,3 @@ class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
         model = models.Schedule
         fields = ('name', 'start_date', 'end_date', 'all_day', 'is_recurring', 'recurrence_pattern', 'business', 'menu')
 
-
-class ScheduleExceptionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = models.ScheduleException
-        fields = ('event', 'date', 'business', 'menu')

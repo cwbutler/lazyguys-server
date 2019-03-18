@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import viewsets
 from api import models, serializers
 
@@ -9,7 +10,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.all().order_by('-date_joined')
+    queryset = get_user_model().objects.all().order_by('-date_joined')
     serializer_class = serializers.UserSerializer
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -28,7 +29,7 @@ class BusinessViewSet(BaseViewSet):
     serializer_class = serializers.BusinessSerializer
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(BaseViewSet):
     """
     API endpoint that allows categories to be viewed or edited.
     """
@@ -36,7 +37,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CategorySerializer
 
 
-class MenuViewSet(viewsets.ModelViewSet):
+class MenuViewSet(BaseViewSet):
     """
     API endpoint that allows menus to be viewed or edited.
     """
@@ -44,7 +45,7 @@ class MenuViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MenuSerializer
 
 
-class MenuItemViewSet(viewsets.ModelViewSet):
+class MenuItemViewSet(BaseViewSet):
     """
     API endpoint that allows menu items to be viewed or edited.
     """
@@ -52,17 +53,9 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MenuItemSerializer
 
 
-class ScheduleViewSet(viewsets.ModelViewSet):
+class ScheduleViewSet(BaseViewSet):
     """
     API endpoint that allows menu items to be viewed or edited.
     """
     queryset = models.Schedule.objects.all()
     serializer_class = serializers.ScheduleSerializer
-
-
-class ScheduleExceptionViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows menu items to be viewed or edited.
-    """
-    queryset = models.ScheduleException.objects.all()
-    serializer_class = serializers.ScheduleExceptionSerializer

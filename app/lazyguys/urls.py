@@ -28,7 +28,6 @@ router.register(r'category', views.CategoryViewSet)
 router.register(r'menu', views.MenuViewSet)
 router.register(r'menuItem', views.MenuItemViewSet)
 router.register(r'schedule', views.ScheduleViewSet)
-router.register(r'scheduleException', views.ScheduleExceptionViewSet)
 
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
