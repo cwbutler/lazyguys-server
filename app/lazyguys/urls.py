@@ -16,31 +16,31 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
-from rest_framework import routers
-from api import views
-from rest_framework.documentation import include_docs_urls
 from django.views.i18n import JavaScriptCatalog
+from rest_framework import routers
+from rest_framework.documentation import include_docs_urls
+from api import views
 
-router = routers.DefaultRouter()
-router.register(r'user', views.UserViewSet)
-router.register(r'business', views.BusinessViewSet)
-router.register(r'category', views.CategoryViewSet)
-router.register(r'menu', views.MenuViewSet)
-router.register(r'menuItem', views.MenuItemViewSet)
-router.register(r'schedule', views.ScheduleViewSet)
+ROUTER = routers.DefaultRouter()
+ROUTER.register(r'user', views.UserViewSet)
+ROUTER.register(r'business', views.BusinessViewSet)
+ROUTER.register(r'category', views.CategoryViewSet)
+ROUTER.register(r'menu', views.MenuViewSet)
+ROUTER.register(r'menuItem', views.MenuItemViewSet)
+ROUTER.register(r'schedule', views.ScheduleViewSet)
 
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
     path('admin/', admin.site.urls),
     url(r'^', include('rest_framework.urls')), # REST api
     url(r'^docs/', include_docs_urls(title='LazyGuys API')),
-    path('', include(router.urls)),
+    path('', include(ROUTER.urls)),
 ]
 
-js_info_dict = {
+JS_INFO_DICT = {
     'packages': ('recurrence', ),
 }
 
 urlpatterns += [
-    url(r'^jsi18n/$', JavaScriptCatalog.as_view(), js_info_dict),
+    url(r'^jsi18n/$', JavaScriptCatalog.as_view(), JS_INFO_DICT),
 ]
