@@ -16,6 +16,7 @@ admin.AdminSite.site_title = ugettext_lazy('Lazyguys Admin')
 
 class BaseModelAdmin(admin.ModelAdmin):
     """ Base admin class """
+    search_fields = ['name']
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         # save obj reference for future processing
@@ -130,13 +131,26 @@ class MenuScheduleInline(BaseScheduleInline):
 class MenuAdmin(BaseModelAdmin):
     """ Menu admin class """
     inlines = [MenuItemInline, MenuScheduleInline]
+    list_display = ('business', 'name')
+    search_fields = ['name', 'business__name']
 
 
 admin.site.register(models.Menu, MenuAdmin)
 
-admin.site.register(models.Category, BaseModelAdmin)
 
-admin.site.register(models.MenuItem, BaseModelAdmin)
+class CategoryAdmin(BaseModelAdmin):
+    """ Category admin class """
+    list_display = ('business', 'name')
+    search_fields = ['name', 'business__name']
+
+admin.site.register(models.Category, CategoryAdmin)
+
+class MenuItemAdmin(BaseModelAdmin):
+    """ Menu item class """
+    list_display = ('name', 'menu')
+    search_fields = ['name', 'menu__name']
+
+admin.site.register(models.MenuItem, MenuItemAdmin)
 
 
 class ScheduleAdmin(BaseModelAdmin):

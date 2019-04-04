@@ -38,7 +38,7 @@ services:
     image: dpage/pgadmin4
     env_file: .env
     ports:
-      - "${PGADMIN_PORT}:${PGADMIN_PORT}"
+      - "${PGADMIN_LISTEN_PORT}:${PGADMIN_LISTEN_PORT}"
     depends_on:
       - db
 

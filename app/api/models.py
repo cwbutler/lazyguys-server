@@ -65,6 +65,7 @@ class Category(BaseModel):
 
     class Meta(BaseModel.Meta):
         verbose_name_plural = 'categories'
+        ordering = ('business__name', 'name')
 
 
 class Menu(BaseModel):
@@ -75,6 +76,9 @@ class Menu(BaseModel):
         Business, on_delete=models.CASCADE, related_name='menus')
     categories = models.ManyToManyField(
         Category, related_name='menus', blank=True)
+
+    class Meta:
+        ordering = ['business__name', 'name']
 
 
 class MenuItem(BaseModel):
