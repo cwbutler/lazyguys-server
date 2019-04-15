@@ -105,6 +105,7 @@ class MenuItemInline(CompactInline):
     """ MenuItem inline class """
     model = models.MenuItem
     extra = 0
+    show_change_link = True
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         field = super(MenuItemInline, self).formfield_for_foreignkey(
@@ -145,10 +146,19 @@ class CategoryAdmin(BaseModelAdmin):
 
 admin.site.register(models.Category, CategoryAdmin)
 
+
+class MenuItemModInline(CompactInline):
+    """ MenuItem inline class """
+    model = models.MenuItemModification
+    extra = 0
+    show_change_link = True
+
 class MenuItemAdmin(BaseModelAdmin):
     """ Menu item class """
+    inlines = [MenuItemModInline]
     list_display = ('name', 'menu')
     search_fields = ['name', 'menu__name']
+    show_change_link = True
 
 admin.site.register(models.MenuItem, MenuItemAdmin)
 

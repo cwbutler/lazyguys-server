@@ -102,7 +102,10 @@ class MenuItem(BaseModel):
 class MenuItemModification(BaseModel):
     """ Menu Item Modification model """
     description = models.TextField(blank=True)
-    value = models.IntegerField(default=0)
+    value = models.IntegerField(
+        default=0,
+        help_text="How much to add to price? If discount, insert negative number"
+    )
     item = models.ForeignKey(
         MenuItem, on_delete=models.CASCADE, related_name='modifications')
 
