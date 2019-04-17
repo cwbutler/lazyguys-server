@@ -32,7 +32,7 @@ ROUTER.register(r'schedule', views.ScheduleViewSet)
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
     path('admin/', admin.site.urls),
-    url(r'^/api/auth', include('rest_framework.urls')), # REST api
+    url(r'^api/auth', include('rest_framework.urls')), # REST api
     url(r'^docs/', include_docs_urls(title='LazyGuys API')),
     url('^api/', include(ROUTER.urls)),
 ]
