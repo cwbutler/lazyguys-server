@@ -13,8 +13,30 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'username', 'email', 'groups')
 
 
+
+class MenuItemSmallSerializer(serializers.HyperlinkedModelSerializer):
+    """ MenuItem serializer """
+
+    class Meta:
+        model = models.MenuItem
+        fields = ('name', 'description', 'order','price', 'active')
+
+
+class MenuSerializer(serializers.ModelSerializer):
+    """ Menu serializer """
+
+    items = MenuItemSmallSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Menu
+        fields = ('id', 'name', 'description', 'order', 'business',
+                  'items', 'available')
+
+
 class BusinessSerializer(serializers.HyperlinkedModelSerializer):
     """ Business serializer """
+
+    menus = MenuSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Business
@@ -27,15 +49,6 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Category
         fields = ('name', 'description', 'order', 'items')
-
-
-class MenuSerializer(serializers.HyperlinkedModelSerializer):
-    """ Menu serializer """
-
-    class Meta:
-        model = models.Menu
-        fields = ('name', 'description', 'order', 'business',
-                  'items', 'available', 'unavailable')
 
 
 class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
