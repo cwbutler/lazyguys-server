@@ -63,6 +63,7 @@ class Command(BaseCommand):
                 models.MenuItem.objects.get_or_create(
                     name=row[0],
                     description=row[4],
+                    price=row[5],
                     menu=menu,
                     created_by=admin
                 )
