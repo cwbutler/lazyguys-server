@@ -40,7 +40,7 @@ class BusinessSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Business
-        fields = ('name', 'description', 'email', 'url', 'address', 'phone', 'menus', 'available')
+        fields = ('id', 'name', 'description', 'email', 'url', 'address', 'phone', 'menus', 'available')
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
