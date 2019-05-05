@@ -19,7 +19,7 @@ class MenuItemSmallSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.MenuItem
-        fields = ('name', 'description', 'order','price', 'active')
+        fields = ('id', 'name', 'description', 'order','price', 'active')
 
 
 class MenuSerializer(serializers.ModelSerializer):
