@@ -1,5 +1,6 @@
 """ Models for lazyguys """
 
+import os
 from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import AbstractUser
@@ -42,6 +43,10 @@ class BaseModel(models.Model):
     def __str__(self):
         return self.name
 
+def business_image_path(instance, filename):
+    """ file will be uploaded to MEDIA_ROOT/business/<business.name>_profile.<fileext> """
+    _, file_extension = os.path.splitext(filename)
+    return 'business/{0}_profile.{1}'.format(instance.name, file_extension)
 
 class Business(BaseModel):
     """ Business model """
@@ -50,10 +55,15 @@ class Business(BaseModel):
     email = models.CharField(max_length=200, blank=True)
     phone = models.CharField(max_length=200, blank=True)
     url = models.CharField(max_length=200, blank=True)
+    image = models.ImageField(upload_to=business_image_path, null=True, blank=True)
 
     class Meta(BaseModel.Meta):
         verbose_name_plural = 'businesses'
 
+def category_image_path(instance, filename):
+    """ file will be uploaded to MEDIA_ROOT/categories/<category_name>.<file_extension> """
+    _, file_extension = os.path.splitext(filename)
+    return 'categories/{0}.{1}'.format(instance.name, file_extension)
 
 class Category(BaseModel):
     """ Category model """
@@ -62,11 +72,16 @@ class Category(BaseModel):
     business = models.ForeignKey(
         Business, on_delete=models.CASCADE, related_name='categories', blank=True, null=True)
     active = models.BooleanField(default=True)
+    image = models.ImageField(upload_to=category_image_path, null=True, blank=True)
 
     class Meta(BaseModel.Meta):
         verbose_name_plural = 'categories'
         ordering = ('business__name', 'name')
 
+def menu_image_path(instance, filename):
+    """ file will be uploaded to MEDIA_ROOT/menus/<business.name>_menu_<menu.name>.<file_extension> """
+    _, file_extension = os.path.splitext(filename)
+    return 'menus/{0}_menu_{1}.{2}'.format(instance.name, instance.business.name, file_extension)
 
 class Menu(BaseModel):
     """ Menu model """
@@ -76,10 +91,15 @@ class Menu(BaseModel):
         Business, on_delete=models.CASCADE, related_name='menus')
     categories = models.ManyToManyField(
         Category, related_name='menus', blank=True)
+    image = models.ImageField(upload_to=menu_image_path, null=True, blank=True)
 
     class Meta:
         ordering = ['business__name', 'name']
 
+def menu_item_image_path(instance, filename):
+    """ file will be uploaded to MEDIA_ROOT/items/<menu.name>_item_<item.name>.<file_extension> """
+    _, file_extension = os.path.splitext(filename)
+    return 'items/{0}_menu_{1}.{2}'.format(instance.name, instance.business.name, file_extension)
 
 class MenuItem(BaseModel):
     """ Menu Item model """
@@ -97,6 +117,7 @@ class MenuItem(BaseModel):
     active = models.BooleanField(default=True, blank=True)
     categories = models.ManyToManyField(
         Category, related_name='items', blank=True)
+    image = models.ImageField(upload_to=menu_item_image_path, null=True, blank=True)
 
 
 class MenuItemModification(BaseModel):

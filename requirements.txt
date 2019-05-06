@@ -9,4 +9,6 @@ djangorestframework-jwt
 gunicorn
 Markdown
 psycopg2
-whitenoise
+django-storages
+Pillow
+boto3

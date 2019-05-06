@@ -19,7 +19,7 @@ class MenuItemSmallSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.MenuItem
-        fields = ('id', 'name', 'description', 'order','price', 'active')
+        fields = ('id', 'name', 'image', 'description', 'order','price', 'active')
 
 
 class MenuSerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class MenuSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Menu
-        fields = ('id', 'name', 'description', 'order', 'business',
+        fields = ('id', 'name', 'image', 'description', 'order', 'business',
                   'items', 'available')
 
 
@@ -40,7 +40,7 @@ class BusinessSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Business
-        fields = ('id', 'name', 'description', 'email', 'url', 'address', 'phone', 'menus', 'available')
+        fields = ('id', 'image', 'name', 'description', 'email', 'url', 'address', 'phone', 'menus', 'available')
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -48,7 +48,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Category
-        fields = ('name', 'description', 'order', 'items')
+        fields = ('id', 'name', 'image', 'description', 'order', 'items')
 
 
 class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
@@ -56,7 +56,7 @@ class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.MenuItem
-        fields = ('name', 'description', 'order', 'menu', 'color', 'width', 'height',
+        fields = ('id', 'name', 'image', 'description', 'order', 'menu', 'color', 'width', 'height',
                   'weight', 'condition', 'model', 'price', 'active', 'categories')
 
 
